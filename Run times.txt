@@ -1,0 +1,2 @@
+First 700 generations of 10 block block-laying switch engine:
+	Obtuse brute force version: 7200 ms
