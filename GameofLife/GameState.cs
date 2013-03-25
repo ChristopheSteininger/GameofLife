@@ -151,30 +151,11 @@ namespace GameofLife
             generation = 0;
         }
 
-        public void Randomize(int inverseAliveProb)
-        {
-            //Random random = new Random();
-
-            //for (int y = 0; y < state.GetLength(0); y++)
-            //{
-            //    for (int x = 0; x < state.GetLength(1); x++)
-            //    {
-            //        state[y, x] = random.Next(inverseAliveProb) == 0;
-            //    }
-            //}
-
-            //algorithm.SetState(state);
-            //generation = 0;\
-
-        }
-
         public void Iterate()
         {
             int start = -state.GetLength(0) / 2;
             root = root.NextGeneration(state, start, start).Expand();
-            //state = FlattenNode(root);
 
-            //generation += root.DisableSuperSpeed ? 1 : (int)Math.Pow(2, root.Level - 2);
             generation += PowerTwos.Get(root.Level - 2);
         }
 

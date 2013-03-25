@@ -18,13 +18,6 @@ namespace GameofLife
         private readonly Node bottomRight;
         private Node result;
 
-        //private bool disableSuperSpeed = false;
-        //public bool DisableSuperSpeed
-        //{
-        //    get { return disableSuperSpeed; }
-        //    set { disableSuperSpeed = value; }
-        //}
-
         private readonly int hashValue;
         public int HashValue { get { return hashValue; } }
 
@@ -115,23 +108,22 @@ namespace GameofLife
         {
             Debug.Assert(level >= 2, "Can only be called on a node at level 2 or above.");
 
-            if (result != null)
+            if (result == null)
             {
-                return result;
+                // Check if the result is stored in the hash table.
+                Node hashed = NodeTable.Lookup(this);
+                if (hashed != null && hashed.result != null)
+                {
+                    result = hashed.result;
+                }
             }
 
-            // Check if the result is stored in the hash table.
-            Node hashed = NodeTable.Lookup(this);
-            if (hashed != null && hashed.result != null)
+            if (result != null)
             {
-                // Save the result if it is hashed.
-                result = hashed.result;
-
-                int offset = PowerTwos.Get(level - 2);
-
                 // Recurse into the children to set the state.
                 if (state != null)
                 {
+                    int offset = PowerTwos.Get(level - 2);
                     result.Flatten(state, x + offset, y + offset);
                 }
 
@@ -191,40 +183,16 @@ namespace GameofLife
                 return result;
             }
 
-            #region Single step iteration code
-            //if (disableSuperSpeed)
-            //{
-            //    // Create the nine sub nodes.
-            //    Node s00 = topLeft.CentredSubNode();
-            //    Node s01 = CenteredHorizontalSubNode(topLeft, topRight);
-            //    Node s02 = topRight.CentredSubNode();
-
-            //    Node s10 = CenteredVerticalSubNode(topLeft, bottomLeft);
-            //    Node s11 = CentredSubSubNode();
-            //    Node s12 = CenteredVerticalSubNode(topRight, bottomRight);
-
-            //    Node s20 = bottomLeft.CentredSubNode();
-            //    Node s21 = CenteredHorizontalSubNode(bottomLeft, bottomRight);
-            //    Node s22 = bottomRight.CentredSubNode();
-
-            //    // Return a centered sub node 1 level down, 1 generation forward.
-            //    return new Node(
-            //        new Node(s00, s01, s10, s11, level - 1).NextGeneration(),
-            //        new Node(s01, s02, s11, s12, level - 1).NextGeneration(),
-            //        new Node(s10, s11, s20, s21, level - 1).NextGeneration(),
-            //        new Node(s11, s12, s21, s22, level - 1).NextGeneration(), level - 1);
-            //}
-            #endregion
-            // Create the nine sub nodes.
             int k3 = PowerTwos.Get(level - 3);
             int k23 = (k3 << 1) + k3;
 
+            // Create the nine sub nodes.
             Node t00 = topLeft.NextGeneration(null, 0, 0);
             Node t01 = CenteredHorizontalSubNodeForward(topLeft, topRight, null, 0, 0);
             Node t02 = topRight.NextGeneration(null, 0, 0);
 
             Node t10 = CenteredVerticalSubNodeForward(topLeft, bottomLeft, null, 0, 0);
-            Node t11 = CentredSubNode().NextGeneration(null, 0, 0);
+            Node t11 = CentredSubNodeForward(null, 0, 0);
             Node t12 = CenteredVerticalSubNodeForward(topRight, bottomRight, null, 0, 0);
 
             Node t20 = bottomLeft.NextGeneration(null, 0, 0);
@@ -242,40 +210,12 @@ namespace GameofLife
             return result;
         }
 
-        #region Single step iteration helper methods
-        //private Node CenteredHorizontalSubNode(Node left, Node right)
-        //{
-        //    Debug.Assert(left.level == right.level, "Must have equal levels.");
-        //    Debug.Assert(left.level > 1, "level must be greater than 1.");
-
-        //    return new Node(left.topRight.bottomRight, right.topLeft.bottomLeft,
-        //        left.bottomRight.topRight, right.bottomLeft.topLeft, left.level - 1);
-        //}
-
-        //private Node CenteredVerticalSubNode(Node top, Node bottom)
-        //{
-        //    Debug.Assert(top.level == bottom.level, "Must have equal levels.");
-        //    Debug.Assert(top.level > 1, "level must be greater than 1.");
-
-        //    return new Node(top.bottomLeft.bottomRight, top.bottomRight.bottomLeft,
-        //        bottom.topLeft.topRight, bottom.topRight.topLeft, top.level - 1);
-        //}
-
-        //private Node CentredSubSubNode()
-        //{
-        //    Debug.Assert(level > 2, "level must be greater than 2.");
-
-        //    return new Node(topLeft.bottomRight.bottomRight, topRight.bottomLeft.bottomLeft,
-        //        bottomLeft.topRight.topRight, bottomRight.topLeft.topLeft, level - 2);
-        //}
-        #endregion
-
-        private Node CentredSubNode()
+        private Node CentredSubNodeForward(bool[,] state, int x, int y)
         {
             Debug.Assert(level > 1, "Level must be greater than 1.");
 
             return new Node(topLeft.bottomRight, topRight.bottomLeft,
-                bottomLeft.topRight, bottomRight.topLeft, level - 1);
+                bottomLeft.topRight, bottomRight.topLeft, level - 1).NextGeneration(state, x, y);
         }
 
         private Node CenteredHorizontalSubNodeForward(Node left, Node right, bool[,] state, int x, int y)

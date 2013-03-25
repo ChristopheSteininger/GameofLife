@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.btnRun = new System.Windows.Forms.Button();
-            this.btnRandomize = new System.Windows.Forms.Button();
             this.btnIterate = new System.Windows.Forms.Button();
             this.lblGeneration = new System.Windows.Forms.Label();
             this.plDisplay = new System.Windows.Forms.Panel();
@@ -48,7 +47,7 @@
             // btnRun
             // 
             this.btnRun.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRun.Location = new System.Drawing.Point(624, 471);
+            this.btnRun.Location = new System.Drawing.Point(612, 478);
             this.btnRun.Name = "btnRun";
             this.btnRun.Size = new System.Drawing.Size(93, 28);
             this.btnRun.TabIndex = 1;
@@ -56,22 +55,10 @@
             this.btnRun.UseVisualStyleBackColor = true;
             this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
             // 
-            // btnRandomize
-            // 
-            this.btnRandomize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRandomize.Enabled = false;
-            this.btnRandomize.Location = new System.Drawing.Point(525, 471);
-            this.btnRandomize.Name = "btnRandomize";
-            this.btnRandomize.Size = new System.Drawing.Size(93, 28);
-            this.btnRandomize.TabIndex = 2;
-            this.btnRandomize.Text = "Randomize";
-            this.btnRandomize.UseVisualStyleBackColor = true;
-            this.btnRandomize.Click += new System.EventHandler(this.btnRandomize_Click);
-            // 
             // btnIterate
             // 
             this.btnIterate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnIterate.Location = new System.Drawing.Point(426, 471);
+            this.btnIterate.Location = new System.Drawing.Point(513, 478);
             this.btnIterate.Name = "btnIterate";
             this.btnIterate.Size = new System.Drawing.Size(93, 28);
             this.btnIterate.TabIndex = 3;
@@ -83,7 +70,7 @@
             // 
             this.lblGeneration.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblGeneration.AutoSize = true;
-            this.lblGeneration.Location = new System.Drawing.Point(77, 434);
+            this.lblGeneration.Location = new System.Drawing.Point(77, 441);
             this.lblGeneration.Name = "lblGeneration";
             this.lblGeneration.Size = new System.Drawing.Size(71, 13);
             this.lblGeneration.TabIndex = 4;
@@ -98,7 +85,7 @@
             this.plDisplay.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.plDisplay.Location = new System.Drawing.Point(12, 42);
             this.plDisplay.Name = "plDisplay";
-            this.plDisplay.Size = new System.Drawing.Size(673, 353);
+            this.plDisplay.Size = new System.Drawing.Size(673, 360);
             this.plDisplay.TabIndex = 5;
             this.plDisplay.Paint += new System.Windows.Forms.PaintEventHandler(this.plDisplay_Paint);
             // 
@@ -141,7 +128,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.scrollV.Location = new System.Drawing.Point(688, 42);
             this.scrollV.Name = "scrollV";
-            this.scrollV.Size = new System.Drawing.Size(17, 353);
+            this.scrollV.Size = new System.Drawing.Size(17, 360);
             this.scrollV.TabIndex = 7;
             this.scrollV.Value = 50;
             this.scrollV.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrollV_Scroll);
@@ -150,7 +137,7 @@
             // 
             this.scrollH.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.scrollH.Location = new System.Drawing.Point(12, 398);
+            this.scrollH.Location = new System.Drawing.Point(12, 405);
             this.scrollH.Name = "scrollH";
             this.scrollH.Size = new System.Drawing.Size(673, 17);
             this.scrollH.TabIndex = 8;
@@ -159,8 +146,9 @@
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 434);
+            this.label1.Location = new System.Drawing.Point(9, 441);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(62, 13);
             this.label1.TabIndex = 9;
@@ -168,6 +156,7 @@
             // 
             // label2
             // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(9, 461);
             this.label2.Name = "label2";
@@ -177,6 +166,7 @@
             // 
             // lblPopulation
             // 
+            this.lblPopulation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblPopulation.AutoSize = true;
             this.lblPopulation.Location = new System.Drawing.Point(77, 461);
             this.lblPopulation.Name = "lblPopulation";
@@ -188,7 +178,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(717, 511);
+            this.ClientSize = new System.Drawing.Size(717, 518);
             this.Controls.Add(this.lblPopulation);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -197,7 +187,6 @@
             this.Controls.Add(this.plDisplay);
             this.Controls.Add(this.lblGeneration);
             this.Controls.Add(this.btnIterate);
-            this.Controls.Add(this.btnRandomize);
             this.Controls.Add(this.btnRun);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -213,7 +202,6 @@
         #endregion
 
         private System.Windows.Forms.Button btnRun;
-        private System.Windows.Forms.Button btnRandomize;
         private System.Windows.Forms.Button btnIterate;
         private System.Windows.Forms.Label lblGeneration;
         private System.Windows.Forms.Panel plDisplay;

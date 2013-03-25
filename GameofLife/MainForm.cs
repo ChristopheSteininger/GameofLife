@@ -70,12 +70,6 @@ namespace GameofLife
             updateStatisticsLabels();
         }
 
-        private void btnRandomize_Click(object sender, System.EventArgs e)
-        {
-            state.Randomize(1);
-            PaintDisplay(plDisplay.CreateGraphics());
-        }
-
         private void btnIterate_Click(object sender, System.EventArgs e)
         {
             state.Iterate();
@@ -117,7 +111,7 @@ namespace GameofLife
             lblGeneration.Text = state.Generation
                 + " Run time: " + runTime.ElapsedMilliseconds;
 
-            lblPopulation.Text = state.Population;
+            //lblPopulation.Text = state.Population;
         }
 
         private void PaintDisplay(Graphics plDisplayGraphics)
@@ -133,27 +127,6 @@ namespace GameofLife
             greenBrush.Dispose();
             blackPen.Dispose();
         }
-
-        //private void PaintGrid(Graphics graphics, Brush cellBrush, Pen gridPen,
-        //    int cellSize, int padding)
-        //{
-        //    int totalSize = cellSize + padding;
-        //    int width = state.State.GetLength(0) * totalSize;
-
-        //    graphics.DrawRectangle(gridPen, 0, 0, width / 2, width / 2);
-
-        //    for (int y = state.State.GetLength(0) / 4; y < 3 * state.State.GetLength(0) / 4; y++)
-        //    {
-        //        for (int x = state.State.GetLength(1) / 4; x < 3 * state.State.GetLength(1) / 4; x++)
-        //        {
-        //            if (state.State != null && state.State[y, x])
-        //            {
-        //                graphics.FillRectangle(cellBrush, x * totalSize - width / 4,
-        //                    y * totalSize - width / 4, cellSize, cellSize);
-        //            }
-        //        }
-        //    }
-        //}
 
         private void PaintGrid(Graphics graphics, Brush cellBrush, Pen gridPen,
             int cellSize, int padding)
