@@ -18,6 +18,9 @@ namespace GameofLife
         private readonly Node bottomRight;
         private Node result;
 
+        private readonly int population;
+        public int Population { get { return population; } }
+
         private readonly int hashValue;
         public int HashValue { get { return hashValue; } }
 
@@ -37,6 +40,9 @@ namespace GameofLife
             this.bottomLeft = NodeTable.Find(bottomLeft);
             this.bottomRight = NodeTable.Find(bottomRight);
 
+            this.population = topLeft.population + topRight.population
+                + bottomLeft.population + bottomRight.population;
+
             this.hashValue = GetHashCode();
         }
 
@@ -50,6 +56,8 @@ namespace GameofLife
             this.topRight = null;
             this.bottomLeft = null;
             this.bottomRight = null;
+
+            this.population = childValue ? 1 : 0;
 
             this.hashValue = GetHashCode();
         }

@@ -111,7 +111,7 @@ namespace GameofLife
             lblGeneration.Text = state.Generation
                 + " Run time: " + runTime.ElapsedMilliseconds;
 
-            //lblPopulation.Text = state.Population;
+            lblPopulation.Text = state.Population.ToString();
         }
 
         private void PaintDisplay(Graphics plDisplayGraphics)

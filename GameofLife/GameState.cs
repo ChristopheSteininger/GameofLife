@@ -22,6 +22,8 @@ namespace GameofLife
         private int generation = 0;
         public int Generation { get { return generation; } }
 
+        public int Population { get { return root.Population; } }
+
         public GameState()
         {
             CreateGosperGliderGun();
