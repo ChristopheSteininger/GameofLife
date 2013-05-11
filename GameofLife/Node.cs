@@ -285,8 +285,8 @@ namespace GameofLife
                 return childValue.GetHashCode();
             }
 
-            return bottomLeft.hashValue + 3 * bottomRight.hashValue
-                + 9 * topRight.hashValue + 27 * topLeft.hashValue;
+            return (bottomLeft.hashValue + 1) + 3 * (bottomRight.hashValue + 1)
+                + 9 * (topRight.hashValue + 1) + 27 * (topLeft.hashValue + 1);
         }
 
         public bool DeepEqualTo(Node a)

@@ -43,7 +43,9 @@
             this.lblPopulation = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.lblRuntime = new System.Windows.Forms.Label();
+            this.tbZoom = new System.Windows.Forms.TrackBar();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbZoom)).BeginInit();
             this.SuspendLayout();
             // 
             // btnRun
@@ -176,8 +178,9 @@
             // 
             // label3
             // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 483);
+            this.label3.Location = new System.Drawing.Point(8, 481);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(49, 13);
             this.label3.TabIndex = 12;
@@ -185,18 +188,29 @@
             // 
             // lblRuntime
             // 
+            this.lblRuntime.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblRuntime.AutoSize = true;
-            this.lblRuntime.Location = new System.Drawing.Point(77, 483);
+            this.lblRuntime.Location = new System.Drawing.Point(77, 481);
             this.lblRuntime.Name = "lblRuntime";
             this.lblRuntime.Size = new System.Drawing.Size(57, 13);
             this.lblRuntime.TabIndex = 13;
             this.lblRuntime.Text = "RUNTIME";
+            // 
+            // tbZoom
+            // 
+            this.tbZoom.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbZoom.Location = new System.Drawing.Point(513, 425);
+            this.tbZoom.Name = "tbZoom";
+            this.tbZoom.Size = new System.Drawing.Size(192, 45);
+            this.tbZoom.TabIndex = 14;
+            this.tbZoom.Scroll += new System.EventHandler(this.tbZoom_Scroll);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(717, 518);
+            this.Controls.Add(this.tbZoom);
             this.Controls.Add(this.lblRuntime);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.lblPopulation);
@@ -214,6 +228,7 @@
             this.Text = "Game of Life";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbZoom)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -236,6 +251,7 @@
         private System.Windows.Forms.Label lblPopulation;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lblRuntime;
+        private System.Windows.Forms.TrackBar tbZoom;
     }
 }
 

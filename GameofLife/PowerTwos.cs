@@ -24,6 +24,11 @@ namespace GameofLife
 
         public static int Get(int exponent)
         {
+            if (exponent < 0)
+            {
+                return 0;
+            }
+
             return powers[exponent];
         }
     }

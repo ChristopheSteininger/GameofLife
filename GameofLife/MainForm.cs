@@ -11,6 +11,7 @@ namespace GameofLife
     public partial class MainForm : Form
     {
         private bool isRunning = false;
+        private bool isDrawing = false;
 
         private BackgroundWorker lifeWorker = new BackgroundWorker();
         private GameState state;
@@ -54,21 +55,29 @@ namespace GameofLife
 
         private void lifeWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            for (int i = 0; !lifeWorker.CancellationPending; i++)
+            while (!lifeWorker.CancellationPending)
             {
                 state.Iterate();
-                PaintDisplay(plDisplay.CreateGraphics());
 
-                lifeWorker.ReportProgress(0);
+                if (!isDrawing)
+                {
+                    lifeWorker.ReportProgress(0);
+                }
             }
 
-            PaintDisplay(plDisplay.CreateGraphics());
+            while (isDrawing)
+            {
+                System.Threading.Thread.Sleep(5);
+            }
+
+            lifeWorker.ReportProgress(100);
         }
 
         #region Boring Event Handlers
         void lifeWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             updateStatisticsLabels();
+            PaintDisplay(plDisplay.CreateGraphics());
         }
 
         private void btnIterate_Click(object sender, System.EventArgs e)
@@ -98,6 +107,11 @@ namespace GameofLife
         }
 
         private void scrollV_Scroll(object sender, ScrollEventArgs e)
+        {
+            PaintDisplay(plDisplay.CreateGraphics());
+        }
+
+        private void tbZoom_Scroll(object sender, EventArgs e)
         {
             PaintDisplay(plDisplay.CreateGraphics());
         }
@@ -133,30 +147,34 @@ namespace GameofLife
 
             plDisplayGraphics.Clear(plDisplay.BackColor);
 
-            PaintGrid(plDisplayGraphics, greenBrush, blackPen, 3, 1);
+            PaintGrid(plDisplayGraphics, greenBrush, blackPen);
 
             plDisplayGraphics.Dispose();
             greenBrush.Dispose();
             blackPen.Dispose();
         }
 
-        private void PaintGrid(Graphics graphics, Brush cellBrush, Pen gridPen,
-            int cellSize, int padding)
+        private void PaintGrid(Graphics graphics, Brush cellBrush, Pen gridPen)
         {
+            isDrawing = true;
+
             if (state.State == null)
             {
                 return;
             }
 
+            int cellSize = PowerTwos.Get(tbZoom.Value);
+            int padding = PowerTwos.Get(tbZoom.Value - 2);
+
             int totalSize = cellSize + padding;
             int width = state.State.GetLength(0) * totalSize;
 
-            int xOffset = (int)(scrollH.Value * width * 0.01f);
+            int xOffset = -(int)(scrollH.Value * width * 0.01f);
             int yOffset = -(int)(scrollV.Value * width * 0.01f);
 
             graphics.DrawRectangle(gridPen, xOffset, yOffset, width, width);
 
-            Rectangle[] cells = new Rectangle[state.Population];
+            Rectangle[] cells = new Rectangle[state.Population + 50];
             int index = 0;
 
             for (int y = 0; y < state.State.GetLength(0); y++)
@@ -172,6 +190,8 @@ namespace GameofLife
             }
 
             graphics.FillRectangles(cellBrush, cells);
+
+            isDrawing = false;
         }
     }
 }
