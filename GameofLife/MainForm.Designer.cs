@@ -41,6 +41,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.lblPopulation = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.lblRuntime = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -130,7 +132,6 @@
             this.scrollV.Name = "scrollV";
             this.scrollV.Size = new System.Drawing.Size(17, 360);
             this.scrollV.TabIndex = 7;
-            this.scrollV.Value = 50;
             this.scrollV.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrollV_Scroll);
             // 
             // scrollH
@@ -141,7 +142,6 @@
             this.scrollH.Name = "scrollH";
             this.scrollH.Size = new System.Drawing.Size(673, 17);
             this.scrollH.TabIndex = 8;
-            this.scrollH.Value = 50;
             this.scrollH.Scroll += new System.Windows.Forms.ScrollEventHandler(this.scrollH_Scroll);
             // 
             // label1
@@ -174,11 +174,31 @@
             this.lblPopulation.TabIndex = 11;
             this.lblPopulation.Text = "POPULATION";
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 483);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(49, 13);
+            this.label3.TabIndex = 12;
+            this.label3.Text = "Runtime:";
+            // 
+            // lblRuntime
+            // 
+            this.lblRuntime.AutoSize = true;
+            this.lblRuntime.Location = new System.Drawing.Point(77, 483);
+            this.lblRuntime.Name = "lblRuntime";
+            this.lblRuntime.Size = new System.Drawing.Size(57, 13);
+            this.lblRuntime.TabIndex = 13;
+            this.lblRuntime.Text = "RUNTIME";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(717, 518);
+            this.Controls.Add(this.lblRuntime);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.lblPopulation);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -214,6 +234,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblPopulation;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblRuntime;
     }
 }
 

@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.Threading;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Diagnostics;
 
 namespace GameofLife
@@ -53,7 +54,7 @@ namespace GameofLife
 
         private void lifeWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            for (int i = 0; !lifeWorker.CancellationPending && i < 700; i++)
+            for (int i = 0; !lifeWorker.CancellationPending; i++)
             {
                 state.Iterate();
                 PaintDisplay(plDisplay.CreateGraphics());
@@ -92,6 +93,7 @@ namespace GameofLife
 
         private void scrollH_Scroll(object sender, ScrollEventArgs e)
         {
+
             PaintDisplay(plDisplay.CreateGraphics());
         }
 
@@ -108,10 +110,20 @@ namespace GameofLife
 
         private void updateStatisticsLabels()
         {
-            lblGeneration.Text = state.Generation
-                + " Run time: " + runTime.ElapsedMilliseconds;
+            lblGeneration.Text = AddSeperators(state.Generation);
+            lblPopulation.Text = AddSeperators(state.Population);
+            lblRuntime.Text = AddSeperators((int)runTime.ElapsedMilliseconds) + " ms";
+        }
 
-            lblPopulation.Text = state.Population.ToString();
+        private string AddSeperators(int number)
+        {
+            string result = number.ToString();
+            for (int i = result.Length - 3; i > 0; i -= 3)
+            {
+                result = result.Insert(i, ",");
+            }
+
+            return result;
         }
 
         private void PaintDisplay(Graphics plDisplayGraphics)
@@ -139,8 +151,13 @@ namespace GameofLife
             int totalSize = cellSize + padding;
             int width = state.State.GetLength(0) * totalSize;
 
-            graphics.DrawRectangle(gridPen, 0, 0, width, width);
-            //graphics.DrawRectangle(gridPen, width / 4, width / 4, width / 2, width / 2);
+            int xOffset = (int)(scrollH.Value * width * 0.01f);
+            int yOffset = -(int)(scrollV.Value * width * 0.01f);
+
+            graphics.DrawRectangle(gridPen, xOffset, yOffset, width, width);
+
+            Rectangle[] cells = new Rectangle[state.Population];
+            int index = 0;
 
             for (int y = 0; y < state.State.GetLength(0); y++)
             {
@@ -148,11 +165,13 @@ namespace GameofLife
                 {
                     if (state.State[y, x])
                     {
-                        graphics.FillRectangle(cellBrush, x * totalSize,
-                            y * totalSize, cellSize, cellSize);
+                        cells[index++] = new Rectangle(x * totalSize + xOffset,
+                            y * totalSize + yOffset, cellSize, cellSize);
                     }
                 }
             }
+
+            graphics.FillRectangles(cellBrush, cells);
         }
     }
 }

@@ -256,6 +256,11 @@ namespace GameofLife
                 {
                     neighbourCount++;
                 }
+
+                if (neighbourCount > 3)
+                {
+                    return false;
+                }
             }
 
             return neighbourCount == 3 || (isAlive && neighbourCount == 2);
