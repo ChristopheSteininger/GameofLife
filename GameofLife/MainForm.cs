@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Windows.Forms;
-using System.Threading;
 using System.ComponentModel;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Diagnostics;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace GameofLife
 {
@@ -58,28 +56,28 @@ namespace GameofLife
             while (!lifeWorker.CancellationPending)
             {
                 state.Iterate();
+                PaintDisplay(plDisplay.CreateGraphics());
 
-                if (!isDrawing)
-                {
+            //    if (!isDrawing)
+            //    {
                     lifeWorker.ReportProgress(0);
-                }
+            //    }
             }
 
-            while (isDrawing)
-            {
-                System.Threading.Thread.Sleep(5);
-            }
+            //while (isDrawing)
+            //{
+            //    System.Threading.Thread.Sleep(5);
+            //}
 
-            lifeWorker.ReportProgress(100);
+            //lifeWorker.ReportProgress(100);
         }
-
-        #region Boring Event Handlers
         void lifeWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             updateStatisticsLabels();
-            PaintDisplay(plDisplay.CreateGraphics());
+            //PaintDisplay(plDisplay.CreateGraphics());
         }
 
+        #region Boring Event Handlers
         private void btnIterate_Click(object sender, System.EventArgs e)
         {
             state.Iterate();
@@ -127,6 +125,8 @@ namespace GameofLife
             lblGeneration.Text = AddSeperators(state.Generation);
             lblPopulation.Text = AddSeperators(state.Population);
             lblRuntime.Text = AddSeperators((int)runTime.ElapsedMilliseconds) + " ms";
+
+            lblGridSize.Text = state.GridSize + " x " + state.GridSize;
         }
 
         private string AddSeperators(int number)
@@ -163,8 +163,8 @@ namespace GameofLife
                 return;
             }
 
-            int cellSize = PowerTwos.Get(tbZoom.Value);
-            int padding = PowerTwos.Get(tbZoom.Value - 2);
+            int cellSize = 2;// PowerTwos.Get(tbZoom.Value);
+            int padding = 1; // PowerTwos.Get(tbZoom.Value - 2);
 
             int totalSize = cellSize + padding;
             int width = state.State.GetLength(0) * totalSize;

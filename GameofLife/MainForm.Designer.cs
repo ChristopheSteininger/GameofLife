@@ -44,6 +44,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.lblRuntime = new System.Windows.Forms.Label();
             this.tbZoom = new System.Windows.Forms.TrackBar();
+            this.label4 = new System.Windows.Forms.Label();
+            this.lblGridSize = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbZoom)).BeginInit();
             this.SuspendLayout();
@@ -205,11 +207,33 @@
             this.tbZoom.TabIndex = 14;
             this.tbZoom.Scroll += new System.EventHandler(this.tbZoom_Scroll);
             // 
+            // label4
+            // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(224, 441);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(67, 13);
+            this.label4.TabIndex = 15;
+            this.label4.Text = "Full grid size:";
+            // 
+            // lblGridSize
+            // 
+            this.lblGridSize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblGridSize.AutoSize = true;
+            this.lblGridSize.Location = new System.Drawing.Point(297, 441);
+            this.lblGridSize.Name = "lblGridSize";
+            this.lblGridSize.Size = new System.Drawing.Size(58, 13);
+            this.lblGridSize.TabIndex = 16;
+            this.lblGridSize.Text = "GRIDSIZE";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(717, 518);
+            this.Controls.Add(this.lblGridSize);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.tbZoom);
             this.Controls.Add(this.lblRuntime);
             this.Controls.Add(this.label3);
@@ -252,6 +276,8 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lblRuntime;
         private System.Windows.Forms.TrackBar tbZoom;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label lblGridSize;
     }
 }
 

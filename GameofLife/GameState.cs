@@ -11,6 +11,9 @@ namespace GameofLife
     {
         private Node root;
 
+        private LinkedList<CellLocation> newCells = new LinkedList<CellLocation>();
+        private LinkedList<CellLocation> removedCells = new LinkedList<CellLocation>();
+
         private bool[,] state;
         public bool[,] State { get { return state; } }
         public bool this[int y, int x]
@@ -23,6 +26,8 @@ namespace GameofLife
         public int Generation { get { return generation; } }
 
         public int Population { get { return root.Population; } }
+
+        public int GridSize { get { return PowerTwos.Get(root.Level); }  }
 
         public GameState()
         {
@@ -155,10 +160,41 @@ namespace GameofLife
 
         public void Iterate()
         {
-            int start = -state.GetLength(0) / 2;
-            root = root.NextGeneration(state, start, start).Expand();
+            int start = -state.GetLength(0) >> 1;
+            Node nextRoot = root.NextGeneration(start, start).Expand();
+
+            CellLocationList list = new CellLocationList();
+            BuildList(root.Tree, 0, 0, list);
+
+            root = nextRoot;
 
             generation += PowerTwos.Get(root.Level - 2);
+        }
+
+        private void BuildList(CellLocationTree tree, int x, int y, CellLocationList list)
+        {
+            if (tree.Offset == 0)
+            {
+                for (CellLocation born = tree.Born.First; born != null; born = born.Next)
+                {
+                    list.Add(new CellLocation(born.Y + y, born.X + x));
+                    state[born.Y + y, born.X + x] = true;
+                }
+
+                for (CellLocation dies = tree.Dies.First; dies != null; dies = dies.Next)
+                {
+                    list.Add(new CellLocation(dies.Y + y, dies.X + x));
+                    state[dies.Y + y, dies.X + x] = false;
+                }
+
+                return;
+            }
+
+            int offset = tree.Offset;
+            BuildList(tree.TopLeft, x, y, list);
+            BuildList(tree.TopRight, x | offset, y, list);
+            BuildList(tree.BottomLeft, x, y | offset, list);
+            BuildList(tree.BottomRight, x | offset, y | offset, list);
         }
 
         private Node CreateNode(bool[,] array)

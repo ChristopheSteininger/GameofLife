@@ -1,9 +1,5 @@
-﻿using System;
+﻿using System.Diagnostics;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
 
 namespace GameofLife
 {
@@ -29,6 +25,12 @@ namespace GameofLife
 
         private readonly bool childValue;
 
+        private CellLocationTree tree;
+        public CellLocationTree Tree { get { return tree; } }
+
+        private readonly CellLocationList born;
+        private readonly CellLocationList dies;
+
         public Node(Node topLeft, Node topRight, Node bottomLeft, Node bottomRight, int level)
         {
             Debug.Assert(level > 0, "Cannot create a child node with children.");
@@ -44,6 +46,18 @@ namespace GameofLife
                 + bottomLeft.population + bottomRight.population;
 
             this.hashValue = GetHashCode();
+
+            if (level == 2)
+            {
+                this.born = new CellLocationList();
+                this.dies = new CellLocationList();
+            }
+
+            else
+            {
+                this.born = null;
+                this.dies = null;
+            }
         }
 
         // Level 0 constructor.
@@ -60,6 +74,9 @@ namespace GameofLife
             this.population = childValue ? 1 : 0;
 
             this.hashValue = GetHashCode();
+
+            this.born = null;
+            this.dies = null;
         }
 
         public Node Expand()
@@ -112,10 +129,11 @@ namespace GameofLife
         // Return a new node 1 level down, centered at this node
         // and 2^(k - 2) generations forward if super speed is enabled.
         // x and y are the coordinates of state grid of this node.
-        public Node NextGeneration(bool[,] state, int x, int y)
+        public Node NextGeneration(int x, int y)
         {
             Debug.Assert(level >= 2, "Can only be called on a node at level 2 or above.");
 
+            // TODO: Check if this is really needed. Should be hashed by its parent.
             if (result == null)
             {
                 // Check if the result is stored in the hash table.
@@ -123,18 +141,12 @@ namespace GameofLife
                 if (hashed != null && hashed.result != null)
                 {
                     result = hashed.result;
+                    tree = hashed.tree;
                 }
             }
 
             if (result != null)
             {
-                // Recurse into the children to set the state.
-                if (state != null)
-                {
-                    int offset = PowerTwos.Get(level - 2);
-                    result.Flatten(state, x + offset, y + offset);
-                }
-
                 return result;
             }
 
@@ -161,6 +173,7 @@ namespace GameofLife
                 bool n33 = bottomRight.bottomRight.childValue;
 
                 // Create four nodes at level 0, 1 generation forward.
+                // TODO: The born and dies list could be set in the IsAlive method.
                 Node resultTopLeft = new Node(IsAlive(n03,
                     new bool[] { n00, n01, n02, n10, n12, n20, n21, n30 }));
 
@@ -178,15 +191,41 @@ namespace GameofLife
                 result = new Node(resultTopLeft, resultTopRight,
                     resultBottomLeft, resultBottomRight, 1);
 
-                // Set state.
-                if (state != null)
-                {
-                    state[y + 1, x + 1] = result.topLeft.childValue;
-                    state[y + 1, x + 2] = result.topRight.childValue;
+                bool[] centerNodes = new bool[] { n03, n12, n21, n30 };
+                bool[] resultNodes = new bool[] { resultTopLeft.childValue, resultTopRight.childValue,
+                        resultBottomLeft.childValue, resultBottomRight.childValue };
 
-                    state[y + 2, x + 1] = result.bottomLeft.childValue;
-                    state[y + 2, x + 2] = result.bottomRight.childValue;
+                // Set born list.
+                if (born.First == null)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        // If the cell was born, add to born list.
+                        if (!centerNodes[i] && resultNodes[i])
+                        {
+                            born.Add(new CellLocation(i % 2, i / 2));
+                        }
+                    }
                 }
+
+                // Set dies list.
+                if (dies.First == null)
+                {
+                    for (int i = 0; i < 4; i++)
+                    {
+                        // If the cell died, add to dies list.
+                        if (centerNodes[i] && !resultNodes[i])
+                        {
+                            dies.Add(new CellLocation(i % 2, i / 2));
+                        }
+                    }
+                }
+
+                if (born.First != null || dies.First != null)
+                {
+                }
+
+                tree = new CellLocationTree(born, dies);
 
                 return result;
             }
@@ -195,53 +234,57 @@ namespace GameofLife
             int k23 = (k3 << 1) + k3;
 
             // Create the nine sub nodes.
-            Node t00 = topLeft.NextGeneration(null, 0, 0);
-            Node t01 = CenteredHorizontalSubNodeForward(topLeft, topRight, null, 0, 0);
-            Node t02 = topRight.NextGeneration(null, 0, 0);
+            // Use the hash table?
+            Node t00 = topLeft.NextGeneration(0, 0);
+            Node t01 = CenteredHorizontalSubNodeForward(topLeft, topRight, 0, 0);
+            Node t02 = topRight.NextGeneration(0, 0);
 
-            Node t10 = CenteredVerticalSubNodeForward(topLeft, bottomLeft, null, 0, 0);
-            Node t11 = CentredSubNodeForward(null, 0, 0);
-            Node t12 = CenteredVerticalSubNodeForward(topRight, bottomRight, null, 0, 0);
+            Node t10 = CenteredVerticalSubNodeForward(topLeft, bottomLeft, 0, 0);
+            Node t11 = CentredSubNodeForward(0, 0);
+            Node t12 = CenteredVerticalSubNodeForward(topRight, bottomRight, 0, 0);
 
-            Node t20 = bottomLeft.NextGeneration(null, 0, 0);
-            Node t21 = CenteredHorizontalSubNodeForward(bottomLeft, bottomRight, null, 0, 0);
-            Node t22 = bottomRight.NextGeneration(null, 0, 0);
+            Node t20 = bottomLeft.NextGeneration(0, 0);
+            Node t21 = CenteredHorizontalSubNodeForward(bottomLeft, bottomRight, 0, 0);
+            Node t22 = bottomRight.NextGeneration(0, 0);
+
+            Node r00 = new Node(t00, t01, t10, t11, level - 1);
+            Node r01 = new Node(t01, t02, t11, t12, level - 1);
+            Node r10 = new Node(t10, t11, t20, t21, level - 1);
+            Node r11 = new Node(t11, t12, t21, t22, level - 1);
 
             // Return a centered sub node 1 level down, 2^(level - 2) generations forward.
-            result = new Node(
-                new Node(t00, t01, t10, t11, level - 1).NextGeneration(state, x + k3, y + k3),
-                new Node(t01, t02, t11, t12, level - 1).NextGeneration(state, x + k23, y + k3),
-                new Node(t10, t11, t20, t21, level - 1).NextGeneration(state, x + k3, y + k23),
-                new Node(t11, t12, t21, t22, level - 1).NextGeneration(state, x + k23, y + k23),
-                level - 1);
+            result = new Node(r00.NextGeneration(x + k3, y + k3), r01.NextGeneration(x + k23, y + k3),
+                r10.NextGeneration(x + k3, y + k23), r11.NextGeneration(x + k23, y + k23), level - 1);
+
+            tree = new CellLocationTree(k3 << 1, r00.tree, r01.tree, r10.tree, r11.tree);
 
             return result;
         }
 
-        private Node CentredSubNodeForward(bool[,] state, int x, int y)
+        private Node CentredSubNodeForward(int x, int y)
         {
             Debug.Assert(level > 1, "Level must be greater than 1.");
 
             return new Node(topLeft.bottomRight, topRight.bottomLeft,
-                bottomLeft.topRight, bottomRight.topLeft, level - 1).NextGeneration(state, x, y);
+                bottomLeft.topRight, bottomRight.topLeft, level - 1).NextGeneration(x, y);
         }
 
-        private Node CenteredHorizontalSubNodeForward(Node left, Node right, bool[,] state, int x, int y)
+        private Node CenteredHorizontalSubNodeForward(Node left, Node right, int x, int y)
         {
             Debug.Assert(left.level == right.level, "Must have equal levels.");
             Debug.Assert(left.level > 1, "level must be greater than 1.");
 
             return new Node(left.topRight, right.topLeft,
-                left.bottomRight, right.bottomLeft, left.level).NextGeneration(state, x, y);
+                left.bottomRight, right.bottomLeft, left.level).NextGeneration(x, y);
         }
 
-        private Node CenteredVerticalSubNodeForward(Node top, Node bottom, bool[,] state, int x, int y)
+        private Node CenteredVerticalSubNodeForward(Node top, Node bottom, int x, int y)
         {
             Debug.Assert(top.level == bottom.level, "Must have equal levels.");
             Debug.Assert(top.level > 1, "Level must be greater than 1.");
 
             return new Node(top.bottomLeft, top.bottomRight,
-                bottom.topLeft, bottom.topRight, top.level).NextGeneration(state, x, y);
+                bottom.topLeft, bottom.topRight, top.level).NextGeneration(x, y);
         }
 
         private bool IsAlive(bool isAlive, bool[] neighbours)
